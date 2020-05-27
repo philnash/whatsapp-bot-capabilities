@@ -1,0 +1,11 @@
+BEGIN:VCARD
+VERSION:3.0
+FN;CHARSET=UTF-8:Phil Nash
+N;CHARSET=UTF-8:Nash;Phil;;;
+EMAIL;CHARSET=UTF-8;type=WORK,INTERNET:philnash@twilio.com
+TITLE;CHARSET=UTF-8:Developer Evangelist
+ROLE;CHARSET=UTF-8:Developer Evangelist
+ORG;CHARSET=UTF-8:Twilio
+URL;type=WORK;CHARSET=UTF-8:https://www.twilio.com
+REV:2020-05-27T01:15:29.566Z
+END:VCARD
