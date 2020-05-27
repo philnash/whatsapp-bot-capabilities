@@ -10,6 +10,12 @@ This bot responds to a number of commands:
 - If you send your **location**, it looks up the current weather in your location
 - If you send anything else it will respond with a default message
 
+* [Running this bot yourself](#running-this-bot-yourself)
+  * [Setup the Twilio Sandbox for WhatsApp](#setup-the-twilio-sandbox-for-whatsapp)
+  * [Running the bot locally](#running-the-bot-locally)
+  * [Deploying to Twilio Functions](#deploying-to-twilio-functions)
+* [Further resources](#further-resources)
+
 ## Running this bot yourself
 
 To run this bot yourself you will need:
@@ -69,3 +75,13 @@ npm run deploy
 When the script is finished you will see a URL that looks like `https://whatsapp-bot-webinar-XXXX-dev.twil.io/whatsapp`. Take that URL and paste it into the [Twilio WhatsApp Sandbox configuration](https://www.twilio.com/console/sms/whatsapp/sandbox).
 
 Then send your bot a message.
+
+## Further resources
+
+- [Twilio API for WhatsApp docs](https://www.twilio.com/docs/whatsapp/api)
+- [WhatsApp guide for getting opt-in from your users](https://developers.facebook.com/docs/whatsapp/guides/opt-in/)
+- [Build a WhatsApp chatbot with Ruby, Sinatra and Twilio](https://www.twilio.com/blog/whatsapp-chatbot-ruby-sinatra-twilio)
+- [Build a location-aware WhatsApp weather bot with Ruby, Sinatra and Twilio](https://www.twilio.com/blog/location-aware-whatsapp-bot-ruby-sinatra-twilio)
+- [Using Location Data in WhatsApp to find nearby healthy restaurants using Twilio and JavaScript](https://www.twilio.com/blog/glorious-food)
+- [Using WhatsApp with the Twilio Conversations API](https://www.twilio.com/docs/conversations/using-whatsapp-conversations)
+- [Using WhatsApp with Twilio Autopilot](https://www.twilio.com/docs/autopilot/channels/whatsapp)
