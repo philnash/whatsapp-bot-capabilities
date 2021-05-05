@@ -1,13 +1,12 @@
-# How to build a location-aware WhatsApp application
+# Building with the Twilio API for WhatsApp
 
-This example code is from the [how to build a location-aware WhatsApp application Twilio webinar](https://ahoy.twilio.com/location-aware-whatsapp-apac-webinar). It demonstrates how to build a WhatsApp bot that reacts to different inputs, including location. It can send messages that include text, images, files and locations.
+This example code is from the [how to build a location-aware WhatsApp application Twilio webinar](https://ahoy.twilio.com/location-aware-whatsapp-apac-webinar) and the [Building with the Twilio API for WhatsApp](https://www.twilio.com/go/whatsapp-webinar-may2021-apac-1). It demonstrates how to build a WhatsApp bot that reacts to different inputs, including location. It can send messages that include text, images, files and locations.
 
 This bot responds to a number of commands:
 
 - **contact**: sends a VCard with Phil's contact details
 - **picture**: sends a picture of Alex, the Twilio developer evangelism team mascot
-- **twilio**: sends the location of the Twilio office in Melbourne
-- If you send your **location**, it looks up the current weather in your location
+- If you send your **location**, it looks up restaurants from the Foursquare API and sends you an image, description and location of a nearby restaurant
 - If you send anything else it will respond with a default message
 
 * [Running this bot yourself](#running-this-bot-yourself)
@@ -23,7 +22,7 @@ To run this bot yourself you will need:
 - A Twilio account ([sign up for a free Twilio account here](https://www.twilio.com/try-twilio))
 - [Node.js](https://nodejs.org/en/download/)
 - A WhatsApp account
-- [A free weatherstack account](https://weatherstack.com)
+- [A Foursquare developer account](https://developer.foursquare.com/)
 
 Then, clone the repository:
 
@@ -46,7 +45,7 @@ cp .env.example .env
 
 Get your Twilio Account Sid and Auth Token from your [Twilio console](https://www.twilio.com/console) and enter them in `.env`.
 
-Get your weatherstack API Access Key from the [weatherstack dashboard](https://weatherstack.com/dashboard) and enter it in `.env`.
+Create a Foursquare application and get your Foursquare API client ID and secret from the [Foursquare developers portal](https://developer.foursquare.com/) and enter them in `.env`.
 
 ### Setup the Twilio Sandbox for WhatsApp
 
