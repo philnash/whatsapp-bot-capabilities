@@ -1,19 +1,52 @@
 const got = require("got");
+const client = got.extend({
+  prefixUrl: "https://api.foursquare.com/v2",
+  responseType: "json",
+});
 
-// Get the weather from the weatherstack API. See the documentation for more
-// details: https://weatherstack.com/documentation
-const getWeather = async (lat, long, accessKey) => {
-  const url = new URL("http://api.weatherstack.com/current");
-  url.searchParams.set("access_key", accessKey);
-  url.searchParams.set("query", `${lat},${long}`);
-  const response = await got(url, {
-    responseType: "json",
+// Get nearby businesses from the Yelp API
+const getNearbyPlaces = async (lat, long, clientId, clientSecret) => {
+  const response = await client.get("venues/search", {
+    searchParams: {
+      ll: `${lat},${long}`,
+      categoryId: "4d4b7105d754a06374d81259",
+      client_id: clientId,
+      client_secret: clientSecret,
+      v: "20210504",
+      radius: 1000,
+    },
   });
-  const {
-    current: { temperature, weather_icons, weather_descriptions },
-  } = response.body;
-  const text = `It is currently ${weather_descriptions[0].toLowerCase()} and ${temperature}°C`;
-  return { text, image: weather_icons[0] };
+  const venues = response.body.response.venues;
+  if (venues.length === 0) {
+    return {
+      text: "Sorry, couldn't find anywhere near you.",
+    };
+  }
+  const place =
+    response.body.response.venues[
+      Math.floor(Math.random() * response.body.response.venues.length)
+    ];
+  const placeDetailsResponse = await client.get(`venues/${place.id}`, {
+    searchParams: {
+      client_id: clientId,
+      client_secret: clientSecret,
+      v: "20210504",
+    },
+  });
+  const placeDetails = placeDetailsResponse.body.response.venue;
+  let text = place.name;
+  text += placeDetails.url ? `\nUrl: ${placeDetails.url}` : "";
+  text += placeDetails.rating ? `\nRating: ${placeDetails.rating}` : "";
+  text +=
+    place.categories.length > 0
+      ? `\nCategories: ${place.categories.map((c) => c.name).join(", ")}`
+      : "";
+  return {
+    text,
+    image: `${placeDetails.bestPhoto.prefix}300${placeDetails.bestPhoto.suffix}`,
+    name: placeDetails.name,
+    location: placeDetails.location,
+  };
 };
 
 exports.handler = async (context, event, callback) => {
@@ -24,28 +57,25 @@ exports.handler = async (context, event, callback) => {
     // If the message includes "contact" send a VCard with contact details
     message.media("/vcard.vcf");
   } else if (event.Latitude && event.Longitude) {
-    // If the message is a location message, use the weatherstack API to get the
-    // current weather.
-    const { text, image } = await getWeather(
+    // If the message is a location message, use the FourSquare API to get a
+    // nearby restaurant.
+    const { text, image, name, location } = await getNearbyPlaces(
       event.Latitude,
       event.Longitude,
-      context.WEATHER_API_KEY
+      context.FOURSQUARE_ID,
+      context.FOURSQUARE_SECRET
     );
     message.body(text);
-    message.media(image);
-  } else if (body.includes("twilio")) {
-    // If the message includes "twilio", send a message with the location of the
-    // Twilio office in Melbourne.
-    // Note that we use the REST API here so that we can set the
-    // persistentAction parameter which is not supported in TwiML.
-    const client = context.getTwilioClient();
-    await client.messages.create({
-      to: event.From,
-      from: "whatsapp:+14155238886",
-      body:
-        "Come say hi at the Twilio Melbourne office when we all go back to work.",
-      persistentAction: ["geo:-37.8146784,144.9636009|Twilio Melbourne"],
-    });
+    if (image) {
+      message.media(image);
+      const client = context.getTwilioClient();
+      await client.messages.create({
+        to: event.From,
+        from: "whatsapp:+14155238886",
+        body: name,
+        persistentAction: `geo:${location.lat},${location.lng}|${name}`,
+      });
+    }
   } else if (body.includes("picture")) {
     // If the message contains "picture" send back a picture of Alex
     message.body("Meet my friend Alex.");
@@ -53,7 +83,7 @@ exports.handler = async (context, event, callback) => {
   } else {
     // Otherwise send a formatted message.
     message.body(
-      "_Thanks_ for coming to the WhatsApp webinar! Hope you learned a lot about **WhatsApp**."
+      "_Thanks_ for coming to the WhatsApp webinar! Hope you learned a lot about *WhatsApp*."
     );
   }
   callback(null, twiml);
