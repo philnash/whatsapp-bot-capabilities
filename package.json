@@ -8,7 +8,7 @@
     "deploy": "twilio-run deploy"
   },
   "dependencies": {
-    "got": "^11.8.2",
+    "got": "^11.8.5",
     "node-foursquare": "^0.4.6",
     "twilio": "^3.61.0"
   },
